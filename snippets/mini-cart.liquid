@@ -1,0 +1,81 @@
+<div id="slidedown-cart"> 
+  <div class="mini-cart-wrap">
+    <div class="mini-cart-title">{{ 'cart.general.mini_cart_title' | t }}</div>
+    <div class="cart-close"><i class="mdi mdi-close"></i></div>
+  </div>
+  <div class="no-items">
+    <div class="empty-carticon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280.028 280.028" width="50" height="50">
+        <path class="c-01" d="M35.004 0h210.02v78.758H35.004V0z" fill="#dd2935"></path>
+        <path class="c-02" d="M262.527 61.256v201.27c0 9.626-7.876 17.502-17.502 17.502H35.004c-9.626 0-17.502-7.876-17.502-17.502V61.256h245.025z" fill="#dd2935"></path>
+        <path class="c-03" d="M35.004 70.007h26.253V26.253L35.004 0v70.007zm183.767-43.754v43.754h26.253V0l-26.253 26.253z" fill="#f04706"></path>
+        <path class="c-04" d="M61.257 61.256V26.253L17.503 61.256h43.754zm157.514-35.003v35.003h43.754l-43.754-35.003z" fill="#dd2935"></path>
+        <path class="c-05" d="M65.632 105.01c-5.251 0-8.751 3.5-8.751 8.751s3.5 8.751 8.751 8.751 8.751-3.5 8.751-8.751c0-5.25-3.5-8.751-8.751-8.751zm148.764 0c-5.251 0-8.751 3.5-8.751 8.751s3.5 8.751 8.751 8.751 8.751-3.5 8.751-8.751c.001-5.25-3.501-8.751-8.751-8.751z" fill="#f04706"></path>
+        <path class="c-06" d="M65.632 121.637c5.251 0 6.126 6.126 6.126 6.126 0 39.379 29.753 70.882 68.257 70.882s68.257-31.503 68.257-70.882c0 0 .875-6.126 6.126-6.126s6.126 6.126 6.126 6.126c0 46.38-35.003 83.133-80.508 83.133s-80.508-37.629-80.508-83.133c-.001-.001.874-6.126 6.124-6.126z" fill="#f04706"></path>
+        <path class="c-07" d="M65.632 112.886c5.251 0 6.126 6.126 6.126 6.126 0 39.379 29.753 70.882 68.257 70.882s68.257-31.503 68.257-70.882c0 0 .875-6.126 6.126-6.126s6.126 6.126 6.126 6.126c0 46.38-35.003 83.133-80.508 83.133s-80.508-37.629-80.508-83.133c-.001 0 .874-6.126 6.124-6.126z" fill="#fdfbf7"></path></svg>
+    </div>
+    <p>{{ 'cart.general.empty' | t }}</p>
+  </div>
+  <ul class="mini-products-list has-items">  
+    {% for item in cart.items %}
+    <li class="item" id="cart-item-{{item.id}}">
+      <a href="{{item.url}}" title="{{item.title}}" class="product-image">
+        <img loading="lazy" src="{{ item.image | product_img_url: 'medium' }}" alt="{{item.title}}"></a>
+      <div class="product-details">
+        <p class="product-name"><a href="{{item.url}}">{{ item.product.title }}
+          {% if item.product.variants.size != 0 %}
+          {% unless item.variant.title contains 'Default' %}
+          {{ item.variant.title }}
+          {% endunless %}
+          {% endif %}</a></p>
+        <div class="cart-collateral"><span class="price">{{item.price | money}}</span> x {{item.quantity}}</div>
+      </div>
+      <a href="javascript:void(0)" title="Remove This Item" class="btn-remove"><span class="mdi mdi-close"></span></a>
+    </li>
+    {% endfor %}
+  </ul>
+  <div class="mini-cart-footer has-items">
+    <div class="cart-footer-actions">
+      <div class="cart-note" title="add note for seller">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+        <span>Note</span>
+      </div>  
+      {% comment %}
+      <div class="coupen-code">        
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-percent"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
+        <span>Coupen</span>
+      </div>
+      {% endcomment %}
+    </div>
+    <div class="note-detail">
+      <cart-note class="cart__note field">
+        <label for="Cart-note">{{ 'cart.general.note' | t }}</label>
+        <textarea class="text-area text-area--resize-vertical field__input" name="note" id="Cart-note" placeholder="{{ 'cart.general.note' | t }}">{{ cart.note }}</textarea>
+      </cart-note>     
+      <button type="button" class="btn text-save">Save</button> 
+      <button type="button" class="btn text-cancle">cancle</button>  
+    </div>
+    {% comment %}
+    <div class="discount-code">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-percent"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
+      <span>Add a Discount Code</span>
+      <div>* Discount will be calculated and applied at checkout</div>
+      <input placeholder="enter discount code" type="text" name="discount" class="discount">
+      <button type="button" class="btn text-save">Save</button> 
+      <button type="button" class="btn text-cancle">cancle</button>  
+    </div>
+    {% endcomment %}
+    <div class="summary">                
+      <p class="total js-contents">
+        <span class="label">{{ 'cart.general.cart_total' | t }}</span>
+        <span class="price">{{cart.total_price | money}}</span> 
+      </p>
+    </div>
+    <div class="actions">
+      <button class="btn text-cart" onclick="window.location='{{ routes.cart_url }}'">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>{{ 'cart.general.view_cart' | t }}</button>
+      <button class="btn text-chackout" onclick="window.location='/checkout'"><i class="mdi mdi-share"></i>{{ 'cart.general.checkout' | t }}</button>
+    </div>
+  </div>
+</div>
+<div class="overlay"></div>

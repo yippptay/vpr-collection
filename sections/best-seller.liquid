@@ -1,0 +1,328 @@
+<div data-section-id="{{ section.id }}" {% if settings.enable_animation != blank %} data-aos="fade-up" {% endif %} class="best-collection-product {% if section.settings.type_bg != "rgba(0,0,0,0)" %} has_bg{% endif %}">
+  <div class="page-width slider-bestproduct-inner {% if section.settings.parallax_enable %} parallex {% endif %}" data-source-url="{{ section.settings.image | img_url: 'master' }}" style="background-color:{{section.settings.bg_color}};background-image:url('{{ section.settings.image | img_url: 'master' }}'); {% if section.settings.parallax_enable %} background-position: 50% 65.8718%; {% else %} background-size: contain; {% endif %}">
+    <div class="container">
+      <div class="slider-bestproduct-wrap">
+        <div class="section-header">
+          {% if section.settings.title != blank %}
+          <h2 class="tt-title">{{ section.settings.title | escape }}</h2>
+          {% endif %}
+        </div>
+        {%- assign collection = collections[section.settings.collection] -%}
+        {%- assign grid_item_width = 'product-li' -%}
+        {%- assign image_size = '270x270' -%}
+        {%- assign product_limit =  8 -%}
+        {%  assign cnt = 1 %} 
+        {%-  assign foundpro = collection.products.count -%}
+        <div class="best-product-div {{ section.settings.class }}{% if section.settings.product_rows %} two_rows{% endif %}"> 
+          <div class="row">
+            <div id="{{ section.settings.class }}_products_slider" class="slider-bestproduct grid grid--view-items owl-carousel owl-theme" data-col="{{ section.settings.product_col }}">
+              {% for product in collection.products limit: product_limit %}
+              {%- assign mod_2 = cnt | modulo:2 -%}
+              {% if section.settings.product_rows %}
+              {% if foundpro >= 8 %}
+              {%  if mod_2 != 0  %}
+              <ul>
+                <li class="{{ grid_item_width }}">
+                  {% endif %}
+                  {% endif %}
+                  {% endif %}
+                  <div data-id="product-{{ product.id }}"  data-col="{{ product.id }}" class="item-row product-layouts item-row grid-view-item{% unless product.available %} product-price--sold-out grid-view-item--sold-out{% endunless %}">
+                    <div class="product-wrapper{% if product.images.size > 1 %} product_container{% endif %}{% if settings.product_hover_image %} hover_imgs{% endif %}">
+                      {% if product.title %}
+                      {%- assign compare_at_price = product.compare_at_price -%} 
+                      {%- assign price = product.price -%}          
+                      {% else %} 
+                      {%- assign compare_at_price = 1999 -%}
+                      {%- assign price = 1999 -%}
+                      {% endif %}
+                      <div class="thumbs product-thumb">
+                        <div class="product-image col-xs-12">
+                          <a class="grid-view-item__link grid-view-item__links" href="{{ product.url | within: collection }}">
+                            <img loading="lazy" class="grid-view-item__image featured-image image_thumb" height="201" width="182" src="{{ product.featured_media | img_url: 'master' }}" alt="{{ product.featured_image.alt }}">
+                            {% if product.images.size > 1 %}
+                            {% if product.images.last %} 
+        {% if settings.product_hover_image %} 
+                            <div class="second-productimg">
+                              <img loading="lazy" class="image_thumb_swap" height="201" width="182" src="{{ product.images.last | product_img_url: 'master' }}" alt="{{ product.images.last.alt | escape }}" />
+                            </div>
+                            {% endif %} 
+                            {% endif %}
+                            {% endif %}
+                          </a>
+        {% if settings.product_hover_image %} 
+                          {% if product.images.size > 1 %}
+                          {% if product.images.last %}
+                          <div class="loader">
+                            <div class="preloader-wrapper active">
+                              <div class="spinner-layer"></div>
+                            </div>
+                          </div>
+                          {% endif %} 
+                            {% endif %}
+                          {% endif %} 
+                          {% if product.compare_at_price > product.price %}
+                          <span class="product-price__sale-label">{{ 'products.product.on_sale' | t }}</span>
+                          {% endif %}
+                          {% assign my_fields = product.metafields.my_fields %}
+                          {% assign key = 'custom_label' %}
+                          {% if my_fields.custom_label != nil %}
+                          <span class="custom_label">{{ product.metafields.my_fields.custom_label }}</span>
+                          {% endif %}
+                          {% if product.available %} 
+                          {% else %}
+                          <div class="sold-out-tag text-center">
+                            <span class="tag">{{ 'products.product.sold_out' | t }}</span>
+                          </div>
+                          {% endif %}
+                        </div>
+                      </div>  
+                      <div class="product-description">
+                        {% if settings.show_vendor %}
+                        <div class="grid-view-item__vendor">{{ product.vendor }}</div>
+                        {% endif %}                     
+                        <div class="h4 grid-view-item__title">
+                          <a class="grid-view-item__link grid-link__title" href="{{ product.url | within: collection }}">{{ product.title  | strip_html | truncate: 40 }}</a>
+                        </div>
+                        {% if settings.collections_show_rating %}    
+                        <div class="spr-badges grid-item-meta {% if product.variants == blank %} color {% endif %}">
+                          <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+                        </div>
+                        {% endif %}
+                        <div class="grid-view-item__meta">
+                          {% capture price %}{{ product.price | money }}{% endcapture %}
+                          {% render 'product-price-listing', product: product, show_vendor: section.settings.show_vendor %}
+                        </div> 
+                        <div class="btn_wrapper">
+                          {% if settings.enable_add_cart %}
+                          {% if product.available %}
+                          {% if product.variants.first.inventory_management == "shopify" %}
+                          {% if product.variants %}  
+                          {% if product.variants.first.inventory_quantity > 0 %}
+                          <div class="pro_btn btn1 add_tocart">
+                            <form action="/cart/add" method="post" class="variants clearfix cart-form-{{ product.id }}">                                    
+                              <input type="hidden" name="id" value="{{ product.variants[0].id }}" />  
+                              <a class="add-cart-btn btn" title="{{ 'products.product.add_to_cart' | t }}">
+                                <svg class="cached" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rotate-cw"><polyline points="23 4 23 10 17 10"></polyline>
+                                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>              
+                                <svg class="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                                <span class="add_cart tooltip-label">{{ 'products.product.add_to_cart' | t }}</span>
+                              </a>
+                            </form>   
+                          </div>
+                          {% else %}
+                          <div class="pro_btn btn1 add_tocart soldout">
+                            <a class="add-cart-btn1 btn add-to-cart-disable" title="{{ 'products.product.sold_out' | t }}">
+                              <svg class="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                              <span class="sold_cart tooltip-label">{{ 'products.product.sold_out' | t }}</span>
+                            </a>  
+                          </div>
+                          {% endif %}
+                          {% else %}
+                          {% if product.inventory_quantity > 0 %}
+                          <div class="pro_btn btn2 add_tocart">
+                            <form action="/cart/add" method="post" class="variants clearfix cart-form-{{ product.id }}">                                    
+                              <input type="hidden" name="id" value="{{ product.variants[0].id }}" />  
+                              <a class="add-cart-btn btn" title="{{ 'products.product.add_to_cart' | t }}">
+                                <svg class="cached" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rotate-cw"><polyline points="23 4 23 10 17 10"></polyline>
+                                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                                <svg class="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                                <span class="add_cart  tooltip-label">{{ 'products.product.add_to_cart' | t }}</span>
+                              </a>
+                            </form>   
+                          </div>
+                          {% else %}
+                          <div class="pro_btn btn2 add_tocart soldout">
+                            <a class="add-cart-btn1 btn add-to-cart-disable" title="{{ 'products.product.sold_out' | t }}">
+                              <svg class="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                              <span class="sold_cart tooltip-label">{{ 'products.product.sold_out' | t }}</span>
+                            </a>  
+                          </div>
+                          {% endif %}
+                          {% endif %}
+                          {% else %}
+                          {% if product.variants.first.inventory_management == "shopify" %}  
+                          {% if product.variants.first.inventory_quantity > 0 %}
+                          <div class="pro_btn btn3 add_tocart">
+                            <form action="/cart/add" method="post" class="variants clearfix cart-form-{{ product.id }}">                                    
+                              <input type="hidden" name="id" value="{{ product.variants[0].id }}" />  
+                              <a class="add-cart-btn btn" title="{{ 'products.product.add_to_cart' | t }}">
+                                <svg class="cached" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rotate-cw"><polyline points="23 4 23 10 17 10"></polyline>
+                                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                                <svg class="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                                <span class="add_cart  tooltip-label">{{ 'products.product.add_to_cart' | t }}</span>
+                              </a>
+                            </form>   
+                          </div>
+                          {% else %}
+                          <div class="pro_btn btn3 add_tocart soldout">
+                            <a class="add-cart-btn1 btn add-to-cart-disable" title="{{ 'products.product.sold_out' | t }}">
+                              <svg class="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                              <span class="sold_cart tooltip-label">{{ 'products.product.sold_out' | t }}</span>
+                            </a>  
+                          </div>
+                          {% endif %}
+                          {% else %}
+                          <div class="pro_btn btn4 add_tocart">
+                            <form action="/cart/add" method="post" class="variants clearfix cart-form-{{ product.id }}">                                    
+                              <input type="hidden" name="id" value="{{ product.variants[0].id }}" />  
+                              <a class="add-cart-btn btn" title="{{ 'products.product.add_to_cart' | t }}">
+                                <svg class="cached" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rotate-cw"><polyline points="23 4 23 10 17 10"></polyline>
+                                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                                <svg class="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                                <span class="add_cart  tooltip-label">{{ 'products.product.add_to_cart' | t }}</span>
+                              </a>
+                            </form>   
+                          </div>
+                          {% endif %}
+                          {% endif %}
+                          {% else %}
+                          <div class="pro_btn btn4 add_tocart soldout">
+                            <a class="add-cart-btn1 btn add-to-cart-disable" title="{{ 'products.product.sold_out' | t }}">
+                              <svg class="plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                              <span class="sold_cart tooltip-label">{{ 'products.product.sold_out' | t }}</span>
+                            </a>  
+                          </div>
+                          {% endif %}
+                          {% endif %} 
+                          {% if settings.enable_wishlist %}       
+                          {% render 'wishlist-icon', product: product %}         
+                          {% endif %}
+                          {% if settings.enable_compare %}
+                          <div class="add-to-compare pro_btn">     
+                            <div class="show">
+                              <div class="default-comparebutton-{{ product.handle }} loading">
+                                <a class="add-in-compare-js btn" data-comparehandle="{{ product.handle }}" title="{{ 'products.compare.add_to_compare' | t }}">
+                                  <svg class="cached" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rotate-cw"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                                  <svg class="repeat" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-ccw"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline>
+                                    <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>                                                                 
+                                  <span class="tooltip-label">{{ 'products.compare.add_to_compare' | t }}</span></a></div>
+                            </div>
+                          </div>
+                          {% endif %}
+                          {% if settings.enable_quick_view %}       
+                          {% render 'quickveiw-icon', product: product %}         
+                          {% endif %} 
+                        </div>
+                        {% if settings.enable_countdown %}        
+                        {% assign my_fields = product.metafields.my_fields %}
+                        {% assign key = 'countdown' %}
+                        {% if my_fields.countdown != nil %}
+                        <div class="flip-countdown simple-countdown"><div class="countdown-container flip-countdown" data-countdown="{{ product.metafields.my_fields.countdown }}"></div></div>
+                        {% endif %}
+                        {% endif %} 
+                      </div>
+                    </div>
+                  </div>
+                  {% if section.settings.product_rows %}
+                  {% if foundpro >= 8 %}
+                  {%  if mod_2 == 0  %}
+                </li>
+              </ul>
+              {% endif %}
+              {% endif %}
+              {% assign cnt = cnt | plus: 1 %}
+              {% endif %}
+
+              {% else %}
+              {% for i in (1..product_limit) %}
+              <div class="{{ grid_item_width }}">
+                <div class="grid-view-item">
+                  <a href="#" class="grid-view-item__link">
+                    <div class="grid-view-item__image">
+                      {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+                      {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                    </div>
+                    {% render 'wishlist-icon' %}
+                    <div class="h4 grid-view-item__title">{{ 'home_page.onboarding.product_title' | t }}</div>
+                    <div class="grid-view-item__meta">
+                      {% render 'product-price' , product: product %}
+                    </div>
+                  </a>
+                </div>
+              </div>
+              {% endfor %}
+              {% if section.settings.product_rows %}
+              {% if foundpro >= 8 %}
+              {%  if mod_2 != 0  %}
+              </li>
+            </ul>
+          {% endif %}
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+{% schema %}
+{
+"name": "bestseller collection",
+"class": "index-section bestseller-collection",
+"settings": [
+{
+"type": "color",
+"id": "bg_color",
+"label": "Background Color",
+"default": "#f5f5f5"
+},
+{
+"type": "checkbox",
+"id": "parallax_enable",
+"label": "Show Parallax Enable"
+}, 
+{
+"type": "image_picker",
+"id": "image",
+"label": "Image"
+},
+{
+"type": "text",
+"id": "class",
+"label": "Add Class",
+"default": "bestproduct"
+},
+{
+"type": "checkbox",
+"id": "product_rows",
+"label": "2 Rows Product"
+},
+{
+"type": "text",
+"id": "title",
+"label": "Heading",
+"default": "bestseller collection"
+},	
+{
+"id": "collection",
+"type": "collection",
+"label": "Collection"
+},
+{
+"type": "select",
+"id": "product_col",
+"label": "Select product Column",
+"options": [
+{
+"value": "3",
+"label": "3 Column"
+},
+{
+"value": "4",
+"label": "4 Column"
+}
+],
+"default": "4"
+}
+],
+"presets": [
+{
+"name": "bestseller collection",
+"category": "Collection"
+}
+]
+}
+{% endschema %}
+<script>jQuery(document).ready(function(){"use strict";var isMobile=/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);if(!isMobile){if(jQuery(".parallex").length){jQuery(".parallex:not(.invert_true)").sitManParallex({invert:!1})};if(jQuery(".parallex.invert_true").length){jQuery(".parallex").sitManParallex({invert:!0})}}else{jQuery(".parallex:not(.invert_true)").sitManParallex({invert:!0});jQuery(".parallex.invert_true").sitManParallex({invert:!0})}});</script><!--End_AZEXO_sections/parallax.liquid_Section-->

@@ -1,0 +1,292 @@
+<div data-section-id="{{ section.id }}"  data-section-type="tt-category-feature-wrap" class="tt-category-feature-wrap" {% if settings.enable_animation != blank %} data-aos="fade-up" {% endif %} style="background-color:{{section.settings.bg_color }}">
+  <div class="container">
+    {%- assign category_limit =  20 -%}
+    <div class="category_feature_wrap">
+      {% if section.settings.title != blank  %}
+      <div class="section-header section-header--small">
+        <h2 class="tt-title" style="color:{{section.settings.title_color }}">{{ section.settings.title }}</h2>  
+      </div>
+      {% endif %}
+      <div class="category_cms_feature_wrap">
+        {% if section.blocks.size > 0 %}
+        <div class="category_cms_feature owl-carousel owl-theme">
+          {% if section.settings.category_row == "2"  %}
+          {%  assign block_size = section.blocks.size %} 
+          {%  assign cnt = 1 %}      
+          {% for block in section.blocks limit:category_limit %}  
+          {%- assign collection = collections[block.settings.collection_cat_id] -%}
+          {%- assign collection2 = collections[block.settings.collection_cat_id2] -%}
+          {%- assign mod_2 = cnt | modulo:2 -%}
+          {% if block_size >= 14 %}
+          {%  if mod_2 != 0  %}
+          <ul>
+            <li class='li_feature'>
+              {% endif %}
+              {% endif %}
+              <div id="cat-featured-{{ block.id }}" class="collection_cat_item col-xs-12">          
+                <a href="{{ collection.url }}">
+                  <div class="collection_img">
+                    <img loading="lazy" src="{{ block.settings.image_1 | img_url: "master"  }}" alt="category featured" />                  
+                  </div> 
+                  <div class="tt-collection-content">                
+                    <div class="collection_title" style="color:{{section.settings.category_text_color }}">{{ block.settings.collection_title }}</div> 
+                    {% if section.settings.banner_display != blank %}
+                    {% if block.settings.collection_cat_id1 or block.settings.collection_cat_id2 != blank %}
+                    <p class="desc">{{ collection.all_products_count }} {{ 'cart.general.items' | t }}</p> 
+                    {% endif %}  
+                    {% endif %}  
+                  </div>                                           
+                </a>
+                <a href="{{ collection2.url }}">
+                  <div class="collection_img">
+                    <img loading="lazy" src="{{ block.settings.image_2 | img_url: "master"  }}" alt="category featured" />                
+                  </div>
+                  <div class="tt-collection-content">              
+                    <div class="collection_title" style="color:{{section.settings.category_text_color }}">{{ block.settings.collection_title2 }}</div> 
+                    {% if section.settings.banner_display != blank %}
+                    {% if block.settings.collection_cat_id1 or block.settings.collection_cat_id2 != blank %}
+                    <p class="desc">{{ collection2.all_products_count }} {{ 'cart.general.items' | t }}</p> 
+                    {% endif %}
+                    {% endif %}
+                  </div>                                      
+                </a>
+              </div>
+
+              {% if block_size >= 14 %}
+              {%  if mod_2 == 0  %}
+            </li>
+          </ul>
+          {% endif %}
+          {% endif  %}      					
+          {% assign cnt = cnt | plus: 1 %}
+          {% endfor %}
+          {% if block_size >= 14 %}
+          {%  if mod_2 != 0  %}
+          </li>
+        </ul>
+      {% endif %}
+      {% endif %}
+      {% else %}
+          {% for block in section.blocks limit:category_limit %}  
+          <ul>
+            <li class='li_feature'>
+              <div id="cat-featured-{{ block.id }}" class="collection_cat_item col-xs-12">          
+                <a href="{{ collection.url }}">
+                  <div class="collection_img">
+                    <img src="{{ block.settings.image_1 | img_url: "master"  }}" alt="category featured" />                  
+                  </div> 
+                  <div class="tt-collection-content">                
+                    <div class="collection_title" style="color:{{section.settings.category_text_color }}">{{ block.settings.collection_title }}</div> 
+                    {% if section.settings.banner_display != blank %}
+                    {% if block.settings.collection_cat_id1 or block.settings.collection_cat_id2 != blank  %}
+                    <p class="desc">{{ collection.all_products_count }} {{ 'cart.general.items' | t }}</p> 
+                    {% endif %}  
+                    {% endif %}  
+                  </div>                                           
+                </a>
+              </div>
+            </li>
+          </ul>
+          {% endfor %}
+      {% endif %}      
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+</div>
+</div>
+<script>
+  $(document).ready(function() {
+   $('body:not(.rtl) .category_cms_feature').owlCarousel({
+    items: {{section.settings.category_col}},
+    nav : true,
+    autoplay:false,
+    autoplaySpeed:1500,	
+    dots : false,
+    responsive: {
+      100: {
+        items: 1
+      },
+      320: {
+        items: 2
+      },
+      481: {
+        items: 2
+      },
+      650: {
+        items: 4
+      },
+      992: {
+        items: 5
+      },
+      1200: {
+        items: 6
+      },
+      1300: {
+        items: 7
+      },
+      1400: {
+        items: 8
+      },
+      1500: {
+        items: {{section.settings.category_col}}
+      }
+    }
+  });
+
+  $('body.rtl .category_cms_feature').owlCarousel({    
+    items: {{section.settings.category_col}},
+    nav : true,
+    autoplay:false,
+    autoplaySpeed:1500,	
+    dots : false,
+    responsive: {
+      100: {
+        items: 1
+      },
+      320: {
+        items: 1
+      },
+      481: {
+        items: 2
+      },
+      650: {
+        items: 4
+      },
+      992: {
+        items: 5
+      },
+      1200: {
+        items: 6
+      },
+      1300: {
+        items: 7
+      },
+      1400: {
+        items: 8
+      },
+      1500: {
+        items: {{section.settings.category_col}}
+      }
+    }
+  });
+  });
+</script>
+{% schema %}
+{
+"name": "Category Feature",
+"class": "category-featured index-section",
+"max_blocks":10,
+"settings":[
+{
+"type": "color",
+"id": "bg_color",
+"label": "Background Color"
+},
+{
+"type": "color",
+"id": "category_text_color",
+"label": "Category title Color"
+},
+{
+"type": "text",
+"id": "title",
+"label": "Title"
+},
+{
+"type": "select",
+"id": "category_row",
+"label": "Select Category Row",
+"options": [
+{
+"value": "1",
+"label": "1 Row"
+},
+{
+"value": "2",
+"label": "2 Row"
+}
+],
+"default": "2"
+},
+{
+"type": "select",
+"id": "category_col",
+"label": "Select category Column",
+"options": [
+{
+"value": "7",
+"label": "7 Column"
+},
+{
+"value": "8",
+"label": "8 Column"
+},
+{
+"value": "9",
+"label": "9 Column"
+}
+],
+"default": "9"
+},
+{
+"type": "checkbox",
+"id": "item_count",
+"label": "Display Category items"
+}
+],
+"blocks": [
+{
+"type": "text_collection",
+"name": "collection cms",
+"settings": [
+{
+"type": "image_picker",
+"id": "image_1",
+"label": "Image",
+"info": "Size: 200x280"
+},
+{
+"type": "collection",
+"id": "collection_cat_id",
+"label": "Select collection"
+},
+{
+"type": "text",
+"id": "collection_title",
+"label": "Title"
+},
+{
+"type": "image_picker",
+"id": "image_2",
+"label": "Image",
+"info": "Size: 200x280"
+},
+{
+"type": "collection",
+"id": "collection_cat_id2",
+"label": "Select collection"
+},
+{
+"type": "text",
+"id": "collection_title2",
+"label": "Title"
+}
+]
+}
+],
+"presets": [
+{
+"name": "Category Feature",
+"category": "Collection",
+"blocks": [
+{
+"type": "text_collection"
+}     
+
+]
+}
+]
+}
+{% endschema %}

@@ -1,0 +1,139 @@
+{% if section.blocks.size > 0 %}
+<div class="ttcmsbanner" {% if settings.enable_animation != blank %} data-aos="fade-up" {% endif %}>
+  <div class="container">  
+    <div class="row">
+      <div class="cms-banner owl-carousel">
+        {% for block in section.blocks %}        
+        <div id="cmsbanner-{{ block.id }}" class="banner banner1 col-sm-12 col-xs-12">
+          {% if block.settings.banner1_img != blank %}
+          <a href="{% if block.settings.banner1_url != blank %}{{ block.settings.banner1_url }}{% else %}#{% endif %}">
+            <img loading="lazy" src="{{ block.settings.banner1_img | img_url:"master" }}" alt="banner1">
+            <div class="banner-content banner-content1 {{ block.settings.text1_position }}">
+              <div class="banner-inner">
+                {% if block.settings.banner1_desc != blank %}<div class="desc">{{ block.settings.banner1_desc }}</div>{% endif %}
+                {% if block.settings.banner1_subtitle != blank %}<div class="subtitle">{{ block.settings.banner1_subtitle }}</div>{% endif %}              
+                {% if block.settings.banner1_title != blank %}<div class="title">{{ block.settings.banner1_title }}</div>{% endif %}              
+                {% if block.settings.banner1_price_desc != blank %}<div class="price_desc">{{ block.settings.banner1_price_desc }}            
+                {% if block.settings.banner1_price != blank %}<span class="price">{{ block.settings.banner1_price }}</span>{% endif %}</div>{% endif %}             
+              </div>
+            </div>
+          </a>
+          {% endif %}
+          <style>
+            .cms-banner #cmsbanner-{{ block.id }}.banner .banner-content .title,.cms-banner #cmsbanner-{{ block.id }}.banner .banner-content .subtitle {color: {{block.settings.title_color }};}	
+            .cms-banner #cmsbanner-{{ block.id }}.banner .banner-content .desc {color: {{block.settings.desc_color }};background: {{block.settings.desc_bgcolor }};}  
+            .cms-banner #cmsbanner-{{ block.id }}.banner .banner-content .price_desc {color: {{block.settings.price_desc_color }};}  
+            .cms-banner #cmsbanner-{{ block.id }}.banner .banner-content .price {color: {{block.settings.price_color }};}  
+          </style> 
+        </div>    
+        {% endfor %}
+      </div>
+    </div>    
+  </div>
+</div>
+{% endif %}
+{% schema %}
+{
+"name": "CMS Banner",
+"class": "index-section cmsbanner",
+"max_blocks": 3,
+"settings": [
+],
+"blocks" : [
+{
+"type": "image",
+"name": "Slide",
+"settings": [
+{
+"type": "image_picker",
+"id": "banner1_img",
+"label": "Banner1 image"
+},
+{
+"type": "url",
+"id": "banner1_url",
+"label": "Banner1 url"
+},
+{
+"type": "select",
+"id": "text1_position",
+"label": "Text Position",
+"options": [
+{
+"value": "left",
+"label": "left"
+},
+{
+"value": "right",
+"label": "Right"
+},
+{
+"value": "center",
+"label": "Center"
+}
+]
+},
+{
+"type": "text",
+"id": "banner1_desc",
+"label": "Banner1 desc"
+},
+{
+"type": "text",
+"id": "banner1_subtitle",
+"label": "Banner1 Sub Title"
+},
+{
+"type": "text",
+"id": "banner1_title",
+"label": "Banner1 title"
+},
+{
+"type": "text",
+"id": "banner1_price_desc",
+"label": "Banner1 price desc"
+},
+{
+"type": "text",
+"id": "banner1_price",
+"label": "Banner1 price"
+},
+{
+"type": "color",
+"id": "title_color",
+"label": "Banner title color"
+},
+{
+"type": "color",
+"id": "desc_color",
+"label": "Banner desc color",
+"default": "#000"
+},
+{
+"type": "color",
+"id": "desc_bgcolor",
+"label": "Banner desc background color",
+"default": "#fff"
+},
+{
+"type": "color",
+"id": "price_desc_color",
+"label": "Banner price desc color"
+},
+{
+"type": "color",
+"id": "price_color",
+"label": "Banner price color",
+"default": "#000"
+}
+]
+}
+],
+"presets": [
+{
+"name": "CMS Banner",
+"category": "TT CMS section"
+}
+]
+}
+{% endschema %}
